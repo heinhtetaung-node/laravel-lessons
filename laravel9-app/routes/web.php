@@ -24,4 +24,9 @@ Route::get('/home', function () {
 
 Route::get('/user', [UserController::class, 'index']);
 Route::get('/user/create', [UserController::class, 'create']);
+Route::get('/user/create2', [UserController::class, 'create2']);
 Route::post('/user', [UserController::class, 'insert']);
+Route::post('/user2', [UserController::class, 'insert2']);
+Route::get('user/{id}', [UserController::class, 'edit']);
+Route::put('user/update', [UserController::class, 'insert2']);
+Route::delete('user/delete/{id}', [UserController::class, 'delete']);

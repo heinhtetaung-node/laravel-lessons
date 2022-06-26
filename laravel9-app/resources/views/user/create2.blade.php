@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <form action="/user" method="POST">
+    <form action="/user2" method="POST">
         @csrf
         @method('POST')
         @include('components.forms.user')    

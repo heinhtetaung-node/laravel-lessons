@@ -7,13 +7,18 @@
     <title>Hello User</title>
 </head>
 <body>
-    <h1>User</h1>
-    Hello <h2>{{ $username }}</h2>
-    
+    <h1>Users</h1>    
+    <a href="/user/create2">Ceate User</a>
     @foreach ($users as $user) 
-        <p>{{ $user['name'] }}</p>
+        <p>{{ $user['name'] }} - {{ $user['email'] }} </p>
+        <a href="/user/{{ $user['id'] }}"><button>Edit</button></a> 
+
+        <form action="/user/delete/{{ $user['id'] }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit">Delete</button>
+        </form>
     @endforeach
-    <hr>
-    1. {{ $singleuser['id'] }} - {{ $singleuser['name'] }}
+    <hr>    
 </body>
 </html>

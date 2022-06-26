@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <form action="/user" method="POST">
+    <form action="/user/update" method="POST">
         @csrf
-        @method('POST')
+        @method('PUT')
         @include('components.forms.user')    
     </form>
-
+      
     <script type="text/javascript" src="/js/user-create.js"></script>
 </body>
 </html>
