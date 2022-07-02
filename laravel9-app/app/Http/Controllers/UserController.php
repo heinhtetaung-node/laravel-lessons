@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CustomUser;
 use App\Http\Requests\UserPostRequest;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -42,7 +43,7 @@ class UserController extends Controller
     }
 
     public function insert2(UserPostRequest $request) {
-        $customer = $request->safe()->only(['name', 'email', 'address', 'nickname', 'id']);
+        $customer = $request->safe()->only(['name', 'email', 'address', 'nickname', 'id', 'password']);
         // var_dump($customer); exit;
         $customUser = new CustomUser();
         if (isset($customer['id']) == 1) {
@@ -53,6 +54,9 @@ class UserController extends Controller
         $customUser->nickname = $customer['nickname'];
         $customUser->email = $customer['email'];
         $customUser->address = $customer['address'];
+        if ($customer['password'] != NULL) {
+            $customUser->password = Hash::make($customer['password']);            
+        }
         $res = $customUser->save();    
         
         if ($res == true) {

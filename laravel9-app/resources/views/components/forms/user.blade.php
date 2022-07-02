@@ -35,6 +35,12 @@ Email : <input id="email" type="email" value="{{ $email }}" onchange="checkValid
 @enderror
 <br /> 
 
+Password : <input id="password" type="password" placeholder="{{ !empty($user)? 'old password': '' }}" value="" onchange="checkValidate()" class="@error('password') is-invalid @enderror" name="password" />
+@error('password')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
+<br /> 
+
 Address : <input id="address" type="text" value="{{ $address }}" onchange="checkValidate()" class="@error('address') is-invalid @enderror" name="address" />
 @error('address')
     <div class="alert alert-danger">{{ $message }}</div>

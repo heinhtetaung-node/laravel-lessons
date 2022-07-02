@@ -24,11 +24,17 @@ class UserPostRequest extends FormRequest
      */
     public function rules(Request $request)
     {
-        $checkDuplicate = ($request->id == NULL)? '|unique:custom_user' : '';
-        
+        $checkDuplicate = '';
+        $checkPassword = '';
+        if ($request->id == NULL) {
+            $checkDuplicate = '|unique:custom_user';
+            $checkPassword = '|required';
+        }
+
         return [
             'name' => 'required',
             'nickname' => 'required_with:name',
+            'password' => 'nullable|min:6'.$checkPassword,
             'email' => 'required|email'.$checkDuplicate,
             'address' => 'required|min:5',
             'id' => 'nullable|integer',

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +31,6 @@ Route::post('/user2', [UserController::class, 'insert2']);
 Route::get('user/{id}', [UserController::class, 'edit']);
 Route::put('user/update', [UserController::class, 'insert2']);
 Route::delete('user/delete/{id}', [UserController::class, 'delete']);
+
+Route::get('login', [LoginController::class, 'login']);
+Route::post('postlogin', [LoginController::class, 'postLogin']);
