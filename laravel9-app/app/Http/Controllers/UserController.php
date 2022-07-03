@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     //
-    public function index() {
+    public function index(Request $request) {
+        // $userSession = $request->session()->get('user');
+        // var_dump($userSession);
         $users = CustomUser::all();
         return view('user/index', [ 'users' => $users ]);
     }
@@ -73,5 +75,10 @@ class UserController extends Controller
         $user = CustomUser::findOrFail($id);
         $user->delete();
         return redirect('/user');
+    }
+
+    public function logout(Request $request) {
+        $request->session()->forget('user');
+        return redirect('login');
     }
 }

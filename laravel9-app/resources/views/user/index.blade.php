@@ -9,6 +9,7 @@
 <body>
     <h1>Users</h1>    
     <a href="/user/create2">Ceate User</a>
+    <a href="/user/logout">Logout</a>
     @foreach ($users as $user) 
         <p>{{ $user['name'] }} - {{ $user['email'] }} </p>
         <a href="/user/{{ $user['id'] }}"><button>Edit</button></a> 
