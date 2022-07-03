@@ -13,7 +13,15 @@ class UserController extends Controller
     public function index(Request $request) {
         // $userSession = $request->session()->get('user');
         // var_dump($userSession);
-        $users = CustomUser::all();
+        $para = ['orderBy' => 'id', 'order' => 'desc'];
+        if ($request->has('orderBy')) {
+            $para['orderBy'] = $request->input('orderBy');
+        }
+        if ($request->has('order')) {
+            $para['order'] = $request->input('order');
+        }
+        
+        $users = CustomUser::orderBy($para['orderBy'], $para['order'])->paginate(5)->withQueryString();
         return view('user/index', [ 'users' => $users ]);
     }
 
