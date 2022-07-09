@@ -37,9 +37,14 @@
     <a href="/user/logout">Logout</a>
     
     <form action="/user" method="GET">
-        @csrf
-        @method('GET')
-        <select  name="orderBy">
+        Name <input type="text" value="{{ request()->get('name') }}" name="name" />
+        (Or)
+        Nickname <input type="text" value="{{ request()->get('nickname') }}" name="nickname" />
+        Address <input type="text" value="{{ request()->get('address') }}" name="address" />
+        <br />
+        Email <input type="email" name="email" value="{{ request()->get('email') }}" />
+        <br />
+        Order By<select  name="orderBy">
             <option {{ request()->get('orderBy') == 'id' ? 'selected' : '' }} value="id">ID</option>
             <option {{ request()->get('orderBy') == 'name' ? 'selected' : '' }} value="name">Name</option>
             <option {{ request()->get('orderBy') == 'email' ? 'selected' : '' }} value="email">Email</option>
@@ -52,7 +57,8 @@
     </form>
     
     @foreach ($users as $user) 
-        <p>{{ $user['id'] }} - {{ $user['name'] }} - {{ $user['email'] }} </p>
+        <p>{{ $user['id'] }} - {{ $user['name'] }} - {{ $user['nickname'] }} - {{ $user['email'] }} </p>
+        <p>{{ $user['address'] }}</p>
         <a href="/user/{{ $user['id'] }}"><button>Edit</button></a> 
 
         <form action="/user/delete/{{ $user['id'] }}" method="POST">

@@ -20,8 +20,71 @@ class UserController extends Controller
         if ($request->has('order')) {
             $para['order'] = $request->input('order');
         }
+        $name = '';        
+        if ($request->has('name')) {
+            $name = $request->name;
+        }
+        $nickname = '';        
+        if ($request->has('nickname')) {
+            $nickname = $request->nickname;
+        }
+        $address = '';        
+        if ($request->has('address')) {
+            $address = $request->address;
+        }
+        // $users = CustomUser::where('name', 'like', '%'.$name.'%')
+        //             ->orWhere('nickname', 'like', '%'.$nickname.'%')
+        //             ->where('address', 'like', '%'.$address.'%')
+        //             // ->where('email', '=', $email)
+        //             ->orderBy($para['orderBy'], $para['order']);
+        //             // ->paginate(50)
+        //             // ->withQueryString();                 
+
+
+        // $users = CustomUser::where(function($query) use ($name, $nickname, $address) {
+        //                         $query->where('name', 'like', '%'.$name.'%')
+        //                               ->orWhere('nickname', 'like', '%'.$nickname.'%');
+        //                     })
+        //                     ->where('address', 'like', '%'.$address.'%')
+        //                     ->orderBy($para['orderBy'], $para['order'])
+        //                     ->paginate(50)
+        //                     ->withQueryString();
         
-        $users = CustomUser::orderBy($para['orderBy'], $para['order'])->paginate(5)->withQueryString();
+        // $users = CustomUser::where(function($query) use ($name, $nickname, $address) {
+        //                                 if ($name != '') {
+        //                                     $query->where('name', 'like', '%'.$name.'%');  
+        //                                 }
+        //                                 if ($nickname != '') {
+        //                                     if ($name != '') {
+        //                                         $query->orWhere('nickname', 'like', '%'.$nickname.'%');
+        //                                     } else {
+        //                                         $query->where('nickname', 'like', '%'.$nickname.'%');
+        //                                     }
+        //                                 }
+        //                             })
+        //                             ->where('address', 'like', '%'.$address.'%')
+        //                             ->orderBy($para['orderBy'], $para['order'])
+        //                             ->paginate(50)
+        //                             ->withQueryString();
+
+        $users = CustomUser::where(function($query) use ($name, $nickname, $address) {
+                                        if ($name != '') {
+                                            $query->where('name', 'like', '%'.$name.'%');  
+                                        }
+                                        if ($nickname != '') {                                            
+                                            $query->orWhere('nickname', 'like', '%'.$nickname.'%');
+                                        }
+                                    });
+
+        $users = $users->where('address', 'like', '%'.$address.'%');
+
+        if ($request->has('email') && $request->get('email') != '') {
+            $users = CustomUser::where('email', '=', $request->get('email'));
+        }
+
+        $users = $users->orderBy($para['orderBy'], $para['order'])->paginate(5)->withQueryString();
+
+        // $users = CustomUser::orderBy($para['orderBy'], $para['order'])->paginate(50)->withQueryString();        
         return view('user/index', [ 'users' => $users ]);
     }
 
