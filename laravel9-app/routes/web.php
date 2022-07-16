@@ -24,7 +24,7 @@ Route::get('/home', function () {
 });
 
 Route::middleware(['checkUser'])->group(function () {
-    Route::get('/user', [UserController::class, 'index'])->middleware('checkUser');
+    Route::get('/user', [UserController::class, 'index']);
     Route::get('/user/create', [UserController::class, 'create']);
     Route::get('/user/create2', [UserController::class, 'create2']);
     Route::get('/user/logout', [UserController::class, 'logout']);
