@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CustomUser extends Model
+class OrderItems extends Model
 {
     use HasFactory;
 
-    protected $table = 'custom_user';
+    protected $table = 'order_items';
 
     public function orders()
     {
-        return $this->hasMany(Orders::class, 'user_id');
+        return $this->belongsTo(Orders::class, 'order_id');
     }
 }

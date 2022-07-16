@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Models\CustomUser;
-
+use App\Models\OrderItems;
+use App\Models\Orders;
 class UserSeeder extends Seeder
 {
     /**
@@ -37,6 +38,19 @@ class UserSeeder extends Seeder
         // $customUser->password = Hash::make('password');
         // $customUser->save();
 
-        CustomUser::factory()->count(50)->create();
+        // working code
+        // CustomUser::factory()->hasOrders(5)->count(20)->create();
+
+    
+        $users = CustomUser::factory()->count(20)->create();
+
+        foreach ($users as $user) {
+            $orders = Orders::factory()->count(3)->for($user)->create();
+            
+            foreach ($orders as $order) {
+                OrderItems::factory()->count(5)->for($order)->create();
+            }
+        }
+    
     }
 }

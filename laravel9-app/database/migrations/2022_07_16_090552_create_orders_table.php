@@ -17,8 +17,6 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->integer('user_id');
-            $table->integer('total_price');
-            $table->integer('total_cost');
         });
     }
 
