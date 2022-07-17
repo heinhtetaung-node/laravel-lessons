@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +36,11 @@ Route::middleware(['checkUser'])->group(function () {
     Route::get('user/{id}', [UserController::class, 'edit']);
     Route::put('user/update', [UserController::class, 'insert2']);
     Route::delete('user/delete/{id}', [UserController::class, 'delete']);
+
+    Route::get('/product', [ProductController::class, 'index']);
+    Route::get('/category', [CategoryController::class, 'index']);
+    Route::get('/order', [OrderController::class, 'index']);
+    Route::get('/order/{id}', [OrderController::class, 'detail']);
 });
     
 Route::get('login', [LoginController::class, 'login']);
