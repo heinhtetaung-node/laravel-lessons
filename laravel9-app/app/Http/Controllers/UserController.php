@@ -202,13 +202,13 @@ class UserController extends Controller
             exit;
         }
 
-        var_dump(json_decode($response->getBody())); 
-        echo "<br>";
-        var_dump($smsResponse); 
-        exit;
+        // var_dump(json_decode($response->getBody())); 
+        // echo "<br>";
+        // var_dump($smsResponse); 
+        // exit;
         
         if ($res == true) {
-            // return redirect('/user');
+            return redirect('/user');
         }
     }
 
