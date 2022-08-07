@@ -5,10 +5,52 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Frontend application</title>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
 </head>
-<body>
-    <h1>User Crud</h1>
+<body style="margin: 0px; margin-top: -20px;">
+    <div id="bgpopup" style="display:none; background-color: rgb(55, 44, 44); z-index: 1; opacity: 0.5; width: 100%; height: 100%; position: absolute;" >
 
+    </div>
+    <div id="popup" style="display:none; background-color: #fff; z-index: 999; width: 500px; min-height: 500px; height: auto; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); ">             
+        <form action="#" id="insert-form" method="POST">
+            Name : <input id="name" value="" onchange="checkValidate()" type="text" class="@error('name') is-invalid @enderror" name="name" />
+            <br />
+            <span class="error" id="err-name"></span>
+            <br />
+
+            Nickname : <input id="nickname" value="" type="text" onchange="checkValidate()" class="@error('nickname') is-invalid @enderror" name="nickname" />
+            <br />
+            <span class="error" id="err-nickname"></span>
+            <br />
+
+            Email : <input id="email" type="email" value="" onchange="checkValidate()" class="@error('email') is-invalid @enderror" name="email" />
+            <br />
+            <span class="error" id="err-email"></span> 
+            <br />
+
+            Password : <input id="password" type="password" placeholder="" value="" onchange="checkValidate()" class="@error('password') is-invalid @enderror" name="password" />
+            <br />
+            <span class="error" id="err-password"></span> 
+            <br />
+
+            Address : <input id="address" type="text" value="" onchange="checkValidate()" class="@error('address') is-invalid @enderror" name="address" />
+            <br />
+            <span class="error" id="err-address"></span>
+            <br />
+            <input type="hidden" value="" name="id" id="id" />
+
+            <button type="submit" id="submitbtn">Submit</button>    
+            <button type="button" id="cancelbtn" onclick="closePopup()">Cancel</button>    
+        </form>
+    </div>
+
+    <h1>User Crud</h1>
+    
+    <button id="create-btn" onclick="openPopup()">Create</button>
     <div id="datas-view"></div>
     <!-- 
     <p>{{ $user['id'] }} - {{ $user['name'] }} - {{ $user['nickname'] }} - {{ $user['email'] }} </p>
@@ -168,6 +210,7 @@
 
 
 function showDatas() {
+    document.getElementById('datas-view').innerHTML = '';
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", "http://127.0.0.1:8000/api/user", false);
     xhttp.send();
@@ -181,6 +224,8 @@ function showDatas() {
         var str = `
                 <p>${data['id']} - ${data['name']} - ${data['nickname']} - ${data['email']}</p>
                 <p>${data['address']}</p>
+                <button onclick="editData(${data['id']})">Edit</button>
+                <button onclick="deleteData(${data['id']})">Delete</button>
                 <hr>
         `;
 
@@ -190,7 +235,135 @@ function showDatas() {
 }
 
 showDatas();
+
+function editData(id) {
+    window.scrollTo({ left: 0, top: 0 });
+    openPopup();
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", `http://127.0.0.1:8000/api/user-detail/${id}`, false);
+    xhttp.send();
+
+    var response = xhttp.responseText;
+    var responseArr = JSON.parse(response);
+    var user = responseArr.data;
+
+    if (xhttp.status === 200) {
+        document.getElementById('name').value = user.name;
+        document.getElementById('nickname').value = user.nickname;
+        document.getElementById('address').value = user.address;
+        document.getElementById('email').value = user.email;
+        document.getElementById('password').placeholder = "Old Password";
+        document.getElementById('id').value = user.id; 
+    }
+}
+
+function deleteData(id) {
+    var res = window.confirm("Are you sure you want to delete ?");
+    if (res === true) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("DELETE", `http://127.0.0.1:8000/api/user/delete/${id}`, false);
+        xhttp.send();
+        showDatas();
+    }
+}
+
+function openPopup() {
+    document.getElementById('popup').style.display = "block"
+    document.getElementById('bgpopup').style.display = "block"
+}
+
+function closePopup() {
+    document.getElementById('popup').style.display = "none"
+    document.getElementById('bgpopup').style.display = "none"
+}
+
+document.getElementById("insert-form").addEventListener("submit", function(event){
+    event.preventDefault();
+    saveData();
+});
+
+function saveData() {
+    // event.preventDefault();
+    var name = document.getElementById('name').value
+    var nickname = document.getElementById('nickname').value
+    var email = document.getElementById('email').value
+    var password = document.getElementById('password').value
+    var address = document.getElementById('address').value
+    var id = document.getElementById('id').value
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "http://127.0.0.1:8000/api/user/add", false);
+    xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhttp.send(`name=${name}&nickname=${nickname}&password=${password}&email=${email}&address=${address}&id=${id}`);
+
+    var response = xhttp.responseText;
+    var responseArr = JSON.parse(response);
     
+    if (xhttp.status === 422) {
+        if (responseArr.name) {
+            document.getElementById('err-name').innerHTML = responseArr.name[0];
+        } else {
+            document.getElementById('err-name').innerHTML = '';
+        }
+        if (responseArr.nickname) {
+            document.getElementById('err-nickname').innerHTML = responseArr.nickname[0];
+        } else {
+            document.getElementById('err-nickname').innerHTML = '';
+        }
+        if (responseArr.address) {
+            document.getElementById('err-address').innerHTML = responseArr.address[0];
+        } else {
+            document.getElementById('err-address').innerHTML = '';
+        }
+        if (responseArr.email) {
+            document.getElementById('err-email').innerHTML = responseArr.email[0];
+        } else {
+            document.getElementById('err-email').innerHTML = '';
+        }
+        if (responseArr.password) {
+            document.getElementById('err-password').innerHTML = responseArr.password[0];
+        } else {
+            document.getElementById('err-password').innerHTML = '';
+        }
+    }
+    if (xhttp.status === 200) {
+        closePopup();
+        showDatas();
+        clearData();
+    }
+}
+
+function clearData() {
+    document.getElementById('name').value = '';
+    document.getElementById('nickname').value = '';
+    document.getElementById('address').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('id').value = '';   
+}
+
+function checkValidate() {
+    var name = document.getElementById("name");
+    var nickname = document.getElementById("nickname");
+    var email = document.getElementById("email");
+    var address = document.getElementById("address");
+    if (
+        name.value != "" &&
+        email.value != "" &&
+        address.value != ""
+        // &&
+        // (name.classList.contains("is-invalid") ||
+        //     email.classList.contains("is-invalid") ||
+        //     address.classList.contains("is-invalid"))
+    ) {
+        if (nickname == "") {
+            return;
+        }
+        document.getElementById("submitbtn").disabled = false;
+    }
+    return;
+}
+
 </script>
 
 </body>

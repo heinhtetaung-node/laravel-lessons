@@ -46,7 +46,7 @@ class UserApiController extends Controller
             $users = CustomUser::where('email', '=', $request->get('email'));
         }
 
-        $users = $users->orderBy($para['orderBy'], $para['order'])->paginate(5)->withQueryString();
+        $users = $users->orderBy($para['orderBy'], $para['order'])->paginate(50)->withQueryString();
         return $users;
     }
     public function insertDatas(UserPostRequest $request) {
@@ -76,5 +76,10 @@ class UserApiController extends Controller
             return ['success' => true];
         }
         return ['success' => false];
+    }
+
+    public function getDataById($id) {
+        $user = CustomUser::findOrFail($id);
+        return ['success' => true, 'data' => $user];
     }
 }
