@@ -137,70 +137,71 @@ class UserController extends Controller
         $customUser->email = $customer['email'];
         $customUser->address = $customer['address'];
         if ($customer['password'] != NULL) {
-            $customUser->password = Hash::make($customer['password']);            
+            // $customUser->password = Hash::make($customer['password']);            
+            $customUser->password = bcrypt($customer['password']);
         }
         $res = $customUser->save();    
 
         // send email to user
-        $BASE_URL = "https://gy2ple.api.infobip.com";
-        $API_KEY = "1f5782599be8e54f040d6223e9081080-403f9346-3ce6-4c2b-97aa-651c9de3ba45";
+        // $BASE_URL = "https://gy2ple.api.infobip.com";
+        // $API_KEY = "1f5782599be8e54f040d6223e9081080-403f9346-3ce6-4c2b-97aa-651c9de3ba45";
         
-        $client = new Client([
-            'base_uri' => $BASE_URL,
-            'headers' => [
-                'Authorization' => "App $API_KEY",
-                'Content-Type' => 'multipart/form-data',
-                'Accept' => 'application/json',
-            ]
-        ]);
+        // $client = new Client([
+        //     'base_uri' => $BASE_URL,
+        //     'headers' => [
+        //         'Authorization' => "App $API_KEY",
+        //         'Content-Type' => 'multipart/form-data',
+        //         'Accept' => 'application/json',
+        //     ]
+        // ]);
         
-        $response = $client->request(
-            'POST',
-            'email/2/send',
-            [
-                RequestOptions::MULTIPART => [
-                    ['name' => 'from', 'contents' => "heinhtetaung.itlife@selfserviceib.com"],
-                    ['name' => 'to', 'contents' => $customUser->email],
-                    ['name' => 'subject', 'contents' => 'Welcome'],
-                    ['name' => 'text', 'contents' => 'Welcome to our website, Your account is successfully created'],
-                    // example how to attach a file
-                    /*[
-                        'Content-type' => 'multipart/form-data',
-                        'name' => 'file',
-                        'contents' => fopen('/tmp/testfile.pdf', 'r'),
-                        'filename' => 'testfile.pdf',
-                    ],*/
-                ],
-            ]
-        );
+        // $response = $client->request(
+        //     'POST',
+        //     'email/2/send',
+        //     [
+        //         RequestOptions::MULTIPART => [
+        //             ['name' => 'from', 'contents' => "heinhtetaung.itlife@selfserviceib.com"],
+        //             ['name' => 'to', 'contents' => $customUser->email],
+        //             ['name' => 'subject', 'contents' => 'Welcome'],
+        //             ['name' => 'text', 'contents' => 'Welcome to our website, Your account is successfully created'],
+        //             // example how to attach a file
+        //             /*[
+        //                 'Content-type' => 'multipart/form-data',
+        //                 'name' => 'file',
+        //                 'contents' => fopen('/tmp/testfile.pdf', 'r'),
+        //                 'filename' => 'testfile.pdf',
+        //             ],*/
+        //         ],
+        //     ]
+        // );
 
 
-        $SENDER = "InfoSMS";
-        $RECIPIENT = "66811766233";
-        $MESSAGE_TEXT = "Welcome to our website, Your account is successfully created";
+        // $SENDER = "InfoSMS";
+        // $RECIPIENT = "66811766233";
+        // $MESSAGE_TEXT = "Welcome to our website, Your account is successfully created";
         
-        $configuration = (new Configuration())
-            ->setHost($BASE_URL)
-            ->setApiKeyPrefix('Authorization', 'App')
-            ->setApiKey('Authorization', $API_KEY);
+        // $configuration = (new Configuration())
+        //     ->setHost($BASE_URL)
+        //     ->setApiKeyPrefix('Authorization', 'App')
+        //     ->setApiKey('Authorization', $API_KEY);
         
-        $client = new Client();
+        // $client = new Client();
         
-        $sendSmsApi = new SendSMSApi($client, $configuration);
-        $destination = (new SmsDestination())->setTo($RECIPIENT);
-        $message = (new SmsTextualMessage())
-            ->setFrom($SENDER)
-            ->setText($MESSAGE_TEXT)
-            ->setDestinations([$destination]);
+        // $sendSmsApi = new SendSMSApi($client, $configuration);
+        // $destination = (new SmsDestination())->setTo($RECIPIENT);
+        // $message = (new SmsTextualMessage())
+        //     ->setFrom($SENDER)
+        //     ->setText($MESSAGE_TEXT)
+        //     ->setDestinations([$destination]);
         
-        $request = (new SmsAdvancedTextualRequest())->setMessages([$message]);
+        // $request = (new SmsAdvancedTextualRequest())->setMessages([$message]);
         
-        try {
-            $smsResponse = $sendSmsApi->sendSmsMessage($request);            
-        } catch (Throwable $apiException) {
-            echo("HTTP Code: " . $apiException->getCode() . "\n"); 
-            exit;
-        }
+        // try {
+        //     $smsResponse = $sendSmsApi->sendSmsMessage($request);            
+        // } catch (Throwable $apiException) {
+        //     echo("HTTP Code: " . $apiException->getCode() . "\n"); 
+        //     exit;
+        // }
 
         // var_dump(json_decode($response->getBody())); 
         // echo "<br>";

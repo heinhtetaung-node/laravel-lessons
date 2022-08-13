@@ -62,7 +62,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\CustomUser::class, // this will solve the Auth::attempt problem
         ],
 
         // 'users' => [

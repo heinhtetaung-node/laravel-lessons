@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Models\CustomUser;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -22,7 +23,8 @@ class LoginController extends Controller
                 'email' => 'user not exist'
             ]);
         }
-        $valid = Hash::check($userReq['password'], $user->password);
+        
+        $valid = Auth::attempt(['email' => $userReq['email'], 'password' => $userReq['password']]);
         if ($valid) {
             $request->session()->put('user', $user);
             // $userSession = $request->session()->get('user');

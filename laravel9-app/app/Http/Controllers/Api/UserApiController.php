@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\CustomUser;
 use App\Http\Requests\UserPostRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserApiController extends Controller
 {
@@ -81,5 +82,29 @@ class UserApiController extends Controller
     public function getDataById($id) {
         $user = CustomUser::findOrFail($id);
         return ['success' => true, 'data' => $user];
+    }
+
+    /**
+     * Login api
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function login(Request $request)
+    {
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
+
+            $user = Auth::user(); 
+            $success['token'] =  $user->createToken('MyApp')->plainTextToken; 
+            $success['name'] =  $user->name;
+   
+            return $this->sendResponse($success, 'User login successfully.');
+        } 
+        else{ 
+            return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
+        } 
+    }
+
+    public function sendError() {
+        return response(['message' => 'user not found!'], 422)->header('Content-Type', 'application/json');
     }
 }
