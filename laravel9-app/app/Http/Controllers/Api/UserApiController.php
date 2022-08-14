@@ -94,10 +94,10 @@ class UserApiController extends Controller
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
 
             $user = Auth::user(); 
-            $success['token'] =  $user->createToken('MyApp')->plainTextToken; 
-            $success['name'] =  $user->name;
+            $successToken['token'] =  $user->createToken('MyApp')->plainTextToken; 
+            $successToken['name'] =  $user->name;
    
-            return $this->sendResponse($success, 'User login successfully.');
+            return $this->sendResponse($successToken, 'User login successfully.');
         } 
         else{ 
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
@@ -106,5 +106,9 @@ class UserApiController extends Controller
 
     public function sendError() {
         return response(['message' => 'user not found!'], 422)->header('Content-Type', 'application/json');
+    }
+
+    public function sendResponse($successToken, $msg) {
+        return response(['message' => $msg, 'userToken' => $successToken], 201)->header('Content-Type', 'application/json');
     }
 }
